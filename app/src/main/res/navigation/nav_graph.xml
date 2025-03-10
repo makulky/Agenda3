@@ -50,6 +50,13 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_mainFragment_to_informationFragment"
+            app:destination="@id/informationFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/addContactFragment"
@@ -57,6 +64,18 @@
         android:label="AddContactFragment" >
         <action
             android:id="@+id/action_addContactFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/informationFragment"
+        android:name="com.example.agenda3.InformationFragment"
+        android:label="InformationFragment" >
+        <action
+            android:id="@+id/action_informationFragment_to_mainFragment"
             app:destination="@id/mainFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
