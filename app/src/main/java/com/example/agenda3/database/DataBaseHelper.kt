@@ -88,6 +88,12 @@ class DatabaseHelper(context: Context) :
         val cursor = db.rawQuery(query, arrayOf(email, password))
 
         return if (cursor.moveToFirst()) {
+            val userId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
+            val sharedPref = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+            with(sharedPref.edit()) {
+                putInt("user_id", userId)
+                apply()
+            }
             cursor.close()
             true
         } else {
