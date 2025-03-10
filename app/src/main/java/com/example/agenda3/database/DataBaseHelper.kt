@@ -175,6 +175,48 @@ class DatabaseHelper(context: Context) :
         }
     }
 
+    fun updateContact(contactId: Int, name: String, surname: String, phone: String, context: Context): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_CONTACT_NAME, name)
+            put(COLUMN_CONTACT_SURNAME, surname)
+            put(COLUMN_CONTACT_PHONE, phone)
+        }
+
+        return try {
+            val result = db.update(TABLE_CONTACTS, values, "$COLUMN_CONTACT_ID = ?", arrayOf(contactId.toString()))
+            db.close()
+            if (result == -1) {
+                Toast.makeText(context, "Error al modificar contacto", Toast.LENGTH_SHORT).show()
+                false
+            } else {
+                Toast.makeText(context, "Contacto modificado", Toast.LENGTH_SHORT).show()
+                true
+            }
+        } catch (e: Exception) {
+            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            false
+        }
+    }
+
+    fun deleteContact(contactId: Int, context: Context): Boolean {
+        val db = this.writableDatabase
+
+        return try {
+            val result = db.delete(TABLE_CONTACTS, "$COLUMN_CONTACT_ID = ?", arrayOf(contactId.toString()))
+            db.close()
+            if (result == -1) {
+                Toast.makeText(context, "Error al eliminar contacto", Toast.LENGTH_SHORT).show()
+                false
+            } else {
+                Toast.makeText(context, "Contacto eliminado", Toast.LENGTH_SHORT).show()
+                true
+            }
+        } catch (e: Exception) {
+            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            false
+        }
+    }
 
 }
 
