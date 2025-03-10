@@ -31,7 +31,6 @@ class MainFragment : Fragment() {
 
         dbHelper = DatabaseHelper(requireContext())
 
-        // Supongamos que el ID del usuario logueado es 1 (esto debe cambiarse según el contexto real)
         val sharedPref = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val userId = sharedPref.getInt("user_id", -1)
 
@@ -46,6 +45,9 @@ class MainFragment : Fragment() {
 
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_addContactFragment)
+        }
+        binding.logout.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
         }
     }
 
