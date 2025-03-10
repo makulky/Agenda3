@@ -169,7 +169,7 @@ buttonLogin.setOnClickListener {
 
 El fragmento interactúa con la clase DatabaseHelper para verificar las credenciales del usuario durante el inicio de sesión. El método loginUser se utiliza para autenticar al usuario con su correo electrónico y contraseña.
 
-####loginUser
+#### loginUser
 
 ```kotlin
 fun loginUser(email: String, password: String, context: Context): Boolean
