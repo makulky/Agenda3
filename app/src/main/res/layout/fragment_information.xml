@@ -8,7 +8,7 @@
     android:gravity="center">
 
     <EditText
-        android:id="@+id/et_nombre"
+        android:id="@+id/tv_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nombre"
@@ -16,7 +16,7 @@
         android:padding="10dp" />
 
     <EditText
-        android:id="@+id/et_apellidos"
+        android:id="@+id/tv_surname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Apellidos"
@@ -25,7 +25,7 @@
         android:layout_marginTop="10dp" />
 
     <EditText
-        android:id="@+id/et_telefono"
+        android:id="@+id/tv_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Teléfono"

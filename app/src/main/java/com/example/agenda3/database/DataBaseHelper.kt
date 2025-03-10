@@ -155,6 +155,27 @@ class DatabaseHelper(context: Context) :
         return contacts
     }
 
+    fun getContactById(contactId: Int): Contact? {
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_CONTACTS WHERE $COLUMN_CONTACT_ID = ?"
+        val cursor = db.rawQuery(query, arrayOf(contactId.toString()))
+
+        return if (cursor.moveToFirst()) {
+            val contact = Contact(
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CONTACT_ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CONTACT_NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CONTACT_SURNAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CONTACT_PHONE))
+            )
+            cursor.close()
+            contact
+        } else {
+            cursor.close()
+            null
+        }
+    }
+
+
 }
 
 data class Contact(val id: Int, val name: String, val surname: String, val phone: String)

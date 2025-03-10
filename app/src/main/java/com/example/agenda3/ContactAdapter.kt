@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.agenda3.database.Contact
 
@@ -18,6 +19,12 @@ class ContactAdapter(private val contacts: List<Contact>) : RecyclerView.Adapter
         val contact = contacts[position]
         holder.contactName.text = "${contact.name} ${contact.surname}"
         holder.contactPhone.text = contact.phone
+
+        // Añade el OnClickListener para navegar a InformationFragment
+        holder.itemView.setOnClickListener {
+            val action = MainFragmentDirections.actionMainFragmentToInformationFragment(contact.id)
+            it.findNavController().navigate(action)
+        }
     }
 
     override fun getItemCount() = contacts.size
