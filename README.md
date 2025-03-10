@@ -7,7 +7,6 @@
 1. [Descripción General](#descripción-general)
 2. [Clases y Métodos](#clases-y-métodos)
    - [DatabaseHelper](#databasehelper)
-   - [Contact](#contact)
    - [LoginFragment](#loginfragment)
    - [RegisterFragment](#registerfragment)
    - [MainFragment](#mainfragment)
@@ -98,7 +97,7 @@ fun deleteContact(contactId: Int, context: Context): Boolean
 Elimina un contacto de la base de datos.
 - Devuelve `true` si la eliminación fue exitosa, `false` en caso de error.
 
-### Contact
+#### Contact
 ```kotlin
 data class Contact(val id: Int, val name: String, val surname: String, val phone: String)
 ```
@@ -107,4 +106,83 @@ Define la estructura de un contacto.
 - `name`: Nombre del contacto.
 - `surname`: Apellido del contacto.
 - `phone`: Número telefónico del contacto.
+
+### LoginFragment
+
+#### Descripción
+
+`LoginFragment` es el fragmento encargado de manejar el inicio de sesión del usuario. Permite ingresar el correo electrónico y la contraseña, con una opción para mostrar/ocultar la contraseña. Si las credenciales son correctas, navega a la pantalla principal de la aplicación.
+
+### Métodos principales
+
+#### onCreateView
+```kotlin
+override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+```
+Este método infla el layout del fragmento de inicio de sesión (`fragment_login.xml`), que contiene los campos para ingresar el correo electrónico, la contraseña, un checkbox para mostrar la contraseña, un botón de inicio de sesión y un enlace para registrarse.
+
+#### onViewCreated
+```kotlin
+override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+```
+Este método se ejecuta después de que la vista haya sido creada. En este fragmento, se realiza la inicialización de los elementos de la interfaz de usuario (`UI`), como el campo de texto para el correo electrónico (`EditText`), la contraseña (`EditText`), el checkbox para mostrar la contraseña, y el botón de inicio de sesión (`Button`).
+
+**Configuración del checkbox para mostrar/ocultar contraseña:** Se configura un listener para el checkbox, de modo que, si está marcado, se muestra la contraseña en el campo de texto, y si está desmarcado, la contraseña se oculta.
+
+```kotlin
+checkBoxShowPassword.setOnCheckedChangeListener { _, isChecked ->
+    if (isChecked) {
+        editTextPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+    } else {
+        editTextPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+    }
+    // Mueve el cursor al final después de cambiar la transformación
+    editTextPassword.setSelection(editTextPassword.text.length)
+}
+```
+
+**Navegación a la pantalla de registro:** Cuando el usuario hace clic en el enlace de "Registrarse" (`textViewRegister`), se navega a la pantalla de registro utilizando la función findNavController().
+
+```kotlin
+textViewRegister.setOnClickListener {
+    findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+}
+```
+
+**Verificación de credenciales de usuario:** Cuando el usuario hace clic en el botón de inicio de sesión (`buttonLogin`), se obtiene el correo electrónico y la contraseña introducidos, y se verifica si son correctos utilizando el método loginUser de la clase DatabaseHelper. Si las credenciales son correctas, se navega a la pantalla principal (`MainFragment`).
+
+```kotlin
+buttonLogin.setOnClickListener {
+    val email = editTextEmail.text.toString()
+    val password = editTextPassword.text.toString()
+
+    if (email.isNotEmpty() && password.isNotEmpty()) {
+        val success = dbHelper.loginUser(email, password, requireContext())
+        if (success) {
+            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
+        }
+    } else {
+        Toast.makeText(requireContext(), "Por favor, ingrese todos los campos", Toast.LENGTH_SHORT).show()
+    }
+}
+```
+
+El fragmento interactúa con la clase DatabaseHelper para verificar las credenciales del usuario durante el inicio de sesión. El método loginUser se utiliza para autenticar al usuario con su correo electrónico y contraseña.
+
+####loginUser
+
+```kotlin
+fun loginUser(email: String, password: String, context: Context): Boolean
+```
+
+Este método de DatabaseHelper recibe el correo electrónico y la contraseña ingresados por el usuario. Realiza una consulta en la base de datos para verificar si existe un usuario con esas credenciales. Si el usuario es encontrado, almacena el user_id en SharedPreferences y devuelve true, indicando que el inicio de sesión fue exitoso.
+
+En el fragmento, si la autenticación es exitosa, se navega a la pantalla principal de la aplicación:
+
+```kotlin
+if (success) {
+    findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
+}
+```
+
 
