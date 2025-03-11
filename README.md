@@ -1,9 +1,6 @@
 # AgendaAPP
 
-## Descripción General
-AgendaAPP es una aplicación Android que permite a los usuarios registrarse, iniciar sesión y gestionar sus contactos. Cada usuario puede agregar, modificar y eliminar sus contactos. La aplicación utiliza SQLite para almacenar la información de los usuarios y sus contactos.
-
-## Índice
+# Índice
 1. [Descripción General](#descripción-general)
 2. [Clases y Métodos](#clases-y-métodos)
    - [DatabaseHelper](#databasehelper)
@@ -14,6 +11,9 @@ AgendaAPP es una aplicación Android que permite a los usuarios registrarse, ini
    - [InformationFragment](#informationfragment)
    - [ContactAdapter](#contactadapter)
 3. [Instrucciones de Uso](#instrucciones-de-uso)
+
+## Descripción General
+AgendaAPP es una aplicación Android que permite a los usuarios registrarse, iniciar sesión y gestionar sus contactos. Cada usuario puede agregar, modificar y eliminar sus contactos. La aplicación utiliza SQLite para almacenar la información de los usuarios y sus contactos.
 
 ## Clases y Métodos
 
