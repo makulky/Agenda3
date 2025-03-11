@@ -476,3 +476,152 @@ override fun onCreateView(
     return view
 }
 ```
+
+### InformationFragment
+
+#### Descripción
+
+`InformationFragment` es un fragmento que permite al usuario ver y modificar la información de un contacto existente en la agenda. Los usuarios pueden editar el nombre, apellido y número de teléfono de un contacto, o eliminar el contacto completamente.
+
+#### Constructor
+
+```kotlin
+class InformationFragment : Fragment()
+```
+
+Define el fragmento que maneja la vista y lógica para mostrar la información de un contacto y ofrecer opciones para modificarla o eliminarla.
+
+### Métodos principales
+
+#### onCreateView
+
+Este método infla la vista del fragmento `fragment_information.xml`, que muestra los campos de entrada para editar el nombre, apellido y teléfono de un contacto. Además, maneja los botones de "Modificar" y "Eliminar" para actualizar o borrar el contacto correspondiente.
+
+##### Lógica para mostrar la información del contacto
+Se obtiene el `contactId` a través de los argumentos del fragmento (`args.contactId`). Luego, se recupera la información del contacto usando el método `getContactById` de la clase `DatabaseHelper` y se muestra en los campos de texto.
+
+##### Lógica de modificación de contacto
+Cuando el usuario hace clic en el botón de "Modificar" (`modifyButton`), se obtiene el nuevo nombre, apellido y teléfono de los campos de texto. Si los campos no están vacíos, se actualiza la información del contacto en la base de datos usando el método `updateContact`. Después de la actualización, el fragmento navega a la pantalla principal (`MainFragment`).
+
+##### Lógica de eliminación de contacto
+Si el usuario hace clic en el botón de "Eliminar" (`deleteButton`), el contacto correspondiente se elimina de la base de datos utilizando el método `deleteContact`. Luego, el fragmento navega de vuelta a la pantalla principal (`MainFragment`).
+
+##### Manejo de errores
+El código incluye un lugar donde se podría manejar el error de campos vacíos antes de realizar la modificación de un contacto. Esto puede incluir la visualización de un mensaje de error o la validación adicional de los campos.
+
+```kotin
+override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+): View? {
+    val view = inflater.inflate(R.layout.fragment_information, container, false)
+
+    dbHelper = DatabaseHelper(requireContext())
+    nameEditText = view.findViewById(R.id.tv_name)
+    surnameEditText = view.findViewById(R.id.tv_surname)
+    phoneEditText = view.findViewById(R.id.tv_phone)
+    modifyButton = view.findViewById(R.id.btn_modify)
+    deleteButton = view.findViewById(R.id.btn_delete)
+
+    val contactId = args.contactId
+    val contact = dbHelper.getContactById(contactId)
+    contact?.let {
+        nameEditText.setText(it.name)
+        surnameEditText.setText(it.surname)
+        phoneEditText.setText(it.phone)
+    }
+
+    modifyButton.setOnClickListener {
+        val name = nameEditText.text.toString()
+        val surname = surnameEditText.text.toString()
+        val phone = phoneEditText.text.toString()
+
+        if (name.isNotEmpty() && surname.isNotEmpty() && phone.isNotEmpty()) {
+            dbHelper.updateContact(contactId, name, surname, phone, requireContext())
+            findNavController().navigate(R.id.action_informationFragment_to_mainFragment)
+        } else {
+            // Manejar error de campos vacíos
+        }
+    }
+
+    deleteButton.setOnClickListener {
+        dbHelper.deleteContact(contactId, requireContext())
+        // Navegar de vuelta al MainFragment después de eliminar
+        findNavController().navigate(R.id.action_informationFragment_to_mainFragment)
+    }
+
+    return view
+}
+```
+
+### ContactAdapter
+
+#### Descripción
+
+`ContactAdapter` es un adaptador para un RecyclerView que se utiliza para mostrar una lista de contactos en la aplicación. Cada elemento de la lista muestra el nombre y el número de teléfono de un contacto. Además, permite navegar al fragmento `InformationFragment` cuando se selecciona un contacto.
+
+#### Constructor
+
+```kotlin
+class ContactAdapter(private val contacts: List<Contact>) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>()
+```
+
+Este adaptador recibe una lista de contactos y se encarga de crear y vincular las vistas correspondientes para cada contacto en el `RecyclerView`.
+
+### Métodos principales
+
+#### onCreateViewHolder
+
+Este método infla el diseño `item_contact.xml` para cada elemento de la lista, creando una vista para un solo contacto. Luego, retorna un `ContactViewHolder` que contiene las referencias a los elementos de la vista.
+
+```kotlin
+override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
+    val view = LayoutInflater.from(parent.context).inflate(R.layout.item_contact, parent, false)
+    return ContactViewHolder(view)
+}
+```
+
+#### onBindViewHolder
+
+En este método, se vinculan los datos del contacto con los elementos de la vista. El nombre y teléfono del contacto se establecen en los `TextView` correspondientes. Además, se configura un `OnClickListener` para cada elemento de la lista: al hacer clic en un contacto, se navega al fragmento `InformationFragment` pasando el `contact.id` como argumento.
+
+```kotlin
+override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
+    val contact = contacts[position]
+    holder.contactName.text = "${contact.name} ${contact.surname}"
+    holder.contactPhone.text = contact.phone
+
+    // Añade el OnClickListener para navegar a InformationFragment
+    holder.itemView.setOnClickListener {
+        val action = MainFragmentDirections.actionMainFragmentToInformationFragment(contact.id)
+        it.findNavController().navigate(action)
+    }
+}
+```
+
+#### getItemCount
+
+Este método devuelve la cantidad de elementos en la lista de contactos, lo que permite al `RecyclerView` saber cuántos elementos debe mostrar.
+
+```kotlin
+override fun getItemCount() = contacts.size
+```
+
+#### ContactViewHolder
+
+El `ContactViewHolder` es una clase que contiene las referencias a las vistas dentro de cada ítem de contacto en el `RecyclerView`. Estas vistas son los TextView que muestran el nombre y el teléfono del contacto.
+
+```kotlin
+class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    val contactName: TextView = itemView.findViewById(R.id.contactName)
+    val contactPhone: TextView = itemView.findViewById(R.id.contactPhone)
+}
+```
+
+## Instrucciones de Uso
+
+
+
+
+
+
